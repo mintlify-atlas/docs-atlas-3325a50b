@@ -1,0 +1,122 @@
+---
+title: "Output formats: Markdown, HTML, and reStructuredText"
+description: "format_output() renders parsed documentation as Markdown, HTML, or reStructuredText. Learn what each format produces and when to use each one for your project."
+---
+
+Once you have parsed your docstrings with `generate()` or `parse_docstring()`, you pass the result to `format_output()` to render it in your target format. The `fmt` argument controls the output — it accepts `"markdown"` (the default), `"html"`, or `"rst"`. Each format transforms the text differently, so the right choice depends on where and how you intend to publish your documentation.
+
+<Tabs>
+  <Tab title="Markdown">
+    Markdown is the default output format. When `fmt="markdown"`, `format_output()` returns the documentation text as-is, without any transformation. The text is already clean and normalized by the parser, so no additional processing is needed.
+
+    ```python
+    from goodboydoc import generate, format_output
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="google")
+    output = format_output(docs, fmt="markdown")
+    print(output)
+    ```
+
+    Given a docstring like:
+
+    ```text
+    Add two numbers together.
+
+    Args:
+        a: First number.
+        b: Second number.
+    ```
+
+    The Markdown output is identical:
+
+    ```markdown
+    Add two numbers together.
+
+    Args:
+        a: First number.
+        b: Second number.
+    ```
+
+    Because `fmt="markdown"` is the default, you can also omit the argument entirely:
+
+    ```python
+    output = format_output(docs)
+    ```
+  </Tab>
+  <Tab title="HTML">
+    When `fmt="html"`, `format_output()` wraps each paragraph in a `<p>` tag and wraps the whole result in a `<div class='goodboydoc'>` element. Paragraphs are split on blank lines (`\n\n`). Special HTML characters in the text are escaped automatically.
+
+    ```python
+    from goodboydoc import generate, format_output
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="google")
+    output = format_output(docs, fmt="html")
+    print(output)
+    ```
+
+    Given the input:
+
+    ```text
+    Add two numbers together.
+
+    Returns the sum as an integer.
+    ```
+
+    The HTML output is:
+
+    ```html
+    <div class='goodboydoc'><p>Add two numbers together.</p><p>Returns the sum as an integer.</p></div>
+    ```
+
+    The `goodboydoc` class on the wrapper `<div>` lets you target the output with CSS in your project's stylesheet.
+  </Tab>
+  <Tab title="reStructuredText">
+    When `fmt="rst"`, `format_output()` adds an underline of `=` characters after every non-indented line. This turns each top-level line into a reStructuredText section title, making the output suitable for inclusion in `.rst` files or Sphinx projects.
+
+    ```python
+    from goodboydoc import generate, format_output
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="sphinx")
+    output = format_output(docs, fmt="rst")
+    print(output)
+    ```
+
+    Given the input:
+
+    ```text
+    Add two numbers together.
+
+    :param a: First number.
+    :param b: Second number.
+    ```
+
+    The RST output is:
+
+    ```rst
+    Add two numbers together.
+    =========================
+
+    :param a: First number.
+    :param b: Second number.
+    ```
+
+    Indented lines (like parameter descriptions) are left untouched — only lines that start at the first column receive an underline.
+  </Tab>
+</Tabs>
+
+## Choosing a format
+
+<Note>
+Use `"markdown"` when writing documentation for GitHub READMEs, Markdown-based static sites, or any tool that renders `.md` files. Use `"html"` when embedding documentation directly into a web page or template. Use `"rst"` when integrating with Sphinx or contributing to a project that uses reStructuredText as its primary documentation format.
+</Note>
+
+You can set a project-wide default in `.goodboydoc.json` to avoid passing `fmt` on every call:
+
+```json
+{
+    "output_format": "markdown"
+}
+```

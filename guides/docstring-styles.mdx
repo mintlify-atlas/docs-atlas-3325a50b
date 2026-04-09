@@ -1,0 +1,111 @@
+---
+title: "Google, NumPy, and Sphinx docstring styles"
+description: "GoodBoyDoc parses Google, NumPy, and Sphinx docstring conventions. Pass the style argument to generate() or parse_docstring() to match your project."
+---
+
+GoodBoyDoc supports three popular Python docstring conventions: Google style, NumPy style, and Sphinx style. When you call `generate()` or `parse_docstring()`, you pass the convention as the `style` argument. GoodBoyDoc uses this to normalize the docstring into clean output, handling format-specific syntax like section headers and directives.
+
+<Tabs>
+  <Tab title="Google style">
+    Google-style docstrings use indented sections with a label followed by a colon — `Args:`, `Returns:`, and `Raises:` are the most common. Parameters are listed with a name, colon, and description, all indented under the section header.
+
+    ```python
+    def add(a, b):
+        """Add two numbers together.
+
+        Args:
+            a: First number.
+            b: Second number.
+
+        Returns:
+            Sum of a and b.
+        """
+        return a + b
+    ```
+
+    Pass `style="google"` to `generate()` to use this convention:
+
+    ```python
+    from goodboydoc import generate
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="google")
+    ```
+
+    Google style is the most widely used convention in open-source Python projects and is the default in many linters and editors.
+  </Tab>
+  <Tab title="NumPy style">
+    NumPy-style docstrings use section headers underlined with dashes — for example, `Parameters` followed by a line of `----------`. Parameters are listed with a name, colon, type, and a description indented on the next line.
+
+    ```python
+    def add(a, b):
+        """Add two numbers together.
+
+        Parameters
+        ----------
+        a : int
+            First number.
+        b : int
+            Second number.
+
+        Returns
+        -------
+        int
+            Sum of a and b.
+        """
+        return a + b
+    ```
+
+    Pass `style="numpy"` to `generate()`:
+
+    ```python
+    from goodboydoc import generate
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="numpy")
+    ```
+
+    When parsing NumPy-style docstrings, GoodBoyDoc strips lines consisting of three or more dashes so the underline separators do not appear in the output.
+  </Tab>
+  <Tab title="Sphinx style">
+    Sphinx-style docstrings use reStructuredText field lists — `:param name:`, `:type name:`, and `:returns:` — inline in the docstring body. There are no separate section headers; each field is a single tagged line.
+
+    ```python
+    def add(a, b):
+        """Add two numbers together.
+
+        :param a: First number.
+        :param b: Second number.
+        :returns: Sum of a and b.
+        """
+        return a + b
+    ```
+
+    Pass `style="sphinx"` to `generate()`:
+
+    ```python
+    from goodboydoc import generate
+
+    source = open("mymodule.py").read()
+    docs = generate(source, style="sphinx")
+    ```
+
+    Sphinx style is a natural choice for projects already using Sphinx to build their documentation, since the field list syntax is native to reStructuredText.
+  </Tab>
+</Tabs>
+
+## Choosing a style
+
+All three styles produce equivalent output after parsing — the choice is mainly about what your team already uses or what your editor and linter support best.
+
+<Tip>
+If you are starting a new project with no existing convention, Google style is a good default. It is readable without tooling, widely supported by editors like VS Code and PyCharm, and works well with GoodBoyDoc's Markdown and HTML output formats.
+</Tip>
+
+You can also set a project-wide default in `.goodboydoc.json` so you do not need to pass `style` on every call:
+
+```json
+{
+    "style": "google"
+}
+```

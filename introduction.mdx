@@ -1,0 +1,53 @@
+---
+title: "GoodBoyDoc: lightweight Python documentation library"
+description: "GoodBoyDoc is a Python library for extracting and normalizing docstrings from source code and rendering them as Markdown, HTML, or reStructuredText."
+---
+
+GoodBoyDoc is a lightweight Python library that reads docstrings directly from your source code and turns them into formatted documentation. If you've been copying docstrings into separate docs by hand, or reaching for heavy frameworks for a project that just needs clean output, GoodBoyDoc gives you a focused, dependency-light alternative that works with the styles you already write.
+
+## What is GoodBoyDoc?
+
+GoodBoyDoc solves the problem of keeping documentation in sync with code. Rather than maintaining a separate documentation file, you annotate your functions and modules with docstrings in one of three standard conventions, then run GoodBoyDoc to produce formatted output. The library extracts all triple-quoted docstrings from a Python source string, normalizes them, and renders them in whichever output format your project needs.
+
+It has minimal dependencies, making it suitable for projects that want a small build footprint.
+
+## Supported docstring styles
+
+GoodBoyDoc can parse three widely-used Python docstring conventions:
+
+- **Google style** — sections like `Args:`, `Returns:`, and `Raises:` are indented beneath a plain-text heading. This is the default style.
+- **NumPy style** — sections are underlined with dashes (e.g., `Parameters\n----------`). GoodBoyDoc normalizes these underlines when parsing.
+- **Sphinx style** — parameters and return values are annotated with `:param name:`, `:type name:`, and `:returns:` directives, as used in Sphinx autodoc.
+
+## Output formats
+
+Once your docstrings are parsed, you can render them in three formats:
+
+- **Markdown** — plain Markdown text, suitable for README files, static site generators, or any Markdown-aware renderer.
+- **HTML** — each paragraph is wrapped in `<p>` tags inside a `<div class='goodboydoc'>` container, ready to embed in a web page.
+- **reStructuredText (RST)** — text with section headings underlined by `=` characters, compatible with Sphinx and other RST toolchains.
+
+## Public API
+
+GoodBoyDoc exposes three public functions:
+
+| Function | Description |
+|---|---|
+| `generate(source, style="google")` | Extract all docstrings from a Python source string and return them as a single normalized documentation string. |
+| `parse_docstring(text, style="google")` | Parse and normalize a single raw docstring according to the given style convention. |
+| `format_output(text, fmt="markdown")` | Render a documentation string as Markdown, HTML, or RST. |
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Install and generate your first docs in under five minutes.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/configuration">
+    Customize behavior with a project-level config file.
+  </Card>
+  <Card title="API reference" icon="code" href="/api/generate">
+    Full function reference for all public functions.
+  </Card>
+  <Card title="Docstring styles" icon="file-lines" href="/guides/docstring-styles">
+    Detailed guide to Google, NumPy, and Sphinx conventions.
+  </Card>
+</CardGroup>

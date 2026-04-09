@@ -1,0 +1,39 @@
+---
+title: "parse_docstring() — normalize a single docstring"
+description: "parse_docstring(text, style) dedents and strips a single raw docstring. With style='numpy', it also removes dash section underlines from the output."
+---
+
+`parse_docstring()` processes a single raw docstring string and returns a cleaned version. It always dedents and strips leading and trailing whitespace. When the `"numpy"` style is selected it also removes NumPy-style section underlines — lines consisting of three or more dashes — which appear immediately after section headings in that convention.
+
+## Parameters
+
+<ParamField path="text" type="string" required>
+  Raw docstring content to normalize. This is the string between the triple quotes, not including the quotes themselves.
+</ParamField>
+
+<ParamField path="style" type="string" default="google">
+  Expected docstring convention. Accepted values are `"google"`, `"numpy"`, and `"sphinx"`. Only `"numpy"` triggers additional processing (dash-line removal); the other styles return the dedented and stripped text as-is.
+</ParamField>
+
+## Return value
+
+Returns a normalized `str`. For `"numpy"` style, lines of three or more dashes are removed. For all other styles, the text is dedented and stripped only.
+
+## Example
+
+```python
+from goodboydoc import parse_docstring
+
+raw = """
+    Parse and normalize a docstring.
+
+    Args:
+        text: Input text.
+"""
+cleaned = parse_docstring(raw, style="google")
+print(cleaned)
+```
+
+<Note>
+  When parsing NumPy-style docstrings, `parse_docstring()` removes dash underlines (e.g., `---`) but does not reformat section headings or parameter lists into another convention.
+</Note>

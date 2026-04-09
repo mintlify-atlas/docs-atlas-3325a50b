@@ -1,0 +1,54 @@
+---
+title: "Configure GoodBoyDoc for your project"
+description: "Create a .goodboydoc.json file in your project root to set default values for style, output_format, include_private, and max_line_length."
+---
+
+Rather than passing `style` and `fmt` arguments on every call, you can define project-wide defaults in a `.goodboydoc.json` file placed in your project root. GoodBoyDoc reads this file automatically and applies its values as defaults whenever those arguments are omitted.
+
+## Config file
+
+Create a `.goodboydoc.json` file in the root of your project:
+
+```json
+{
+    "style": "google",
+    "output_format": "markdown",
+    "include_private": false,
+    "max_line_length": 79
+}
+```
+
+All four fields are optional. GoodBoyDoc falls back to its built-in defaults for any field you omit.
+
+## Config options
+
+<ParamField path="style" type="string" default="google">
+  The docstring convention to use when parsing source code. Accepted values are `"google"`, `"numpy"`, and `"sphinx"`. This sets the default for the `style` argument of `generate` and `parse_docstring`.
+</ParamField>
+
+<ParamField path="output_format" type="string" default="markdown">
+  The rendering format for documentation output. Accepted values are `"markdown"`, `"html"`, and `"rst"`. This sets the default for the `fmt` argument of `format_output`.
+</ParamField>
+
+<ParamField path="include_private" type="boolean" default="false">
+  When `true`, GoodBoyDoc includes docstrings from private members — functions and methods whose names begin with an underscore (e.g., `_helper`). Set to `false` to skip them.
+</ParamField>
+
+<ParamField path="max_line_length" type="number" default="79">
+  The maximum line length, in characters, used when wrapping output text. Follows the PEP 8 convention of 79 characters by default.
+</ParamField>
+
+<Note>
+  Arguments passed directly to `generate`, `parse_docstring`, or `format_output` take precedence over values in `.goodboydoc.json`. Per-call arguments always win.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    See end-to-end examples of calling the GoodBoyDoc API.
+  </Card>
+  <Card title="API reference" icon="code" href="/api/generate">
+    Full reference for all arguments accepted by each public function.
+  </Card>
+</CardGroup>

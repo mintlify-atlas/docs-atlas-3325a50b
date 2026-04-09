@@ -1,0 +1,71 @@
+---
+title: "format_output() — render docs as Markdown, HTML, or RST"
+description: "format_output(text, fmt) renders a documentation string as Markdown, HTML wrapped in paragraph and div tags, or RST with = heading underlines."
+---
+
+`format_output()` takes a documentation string and renders it in one of three target formats. For `"markdown"` it returns the text unchanged. For `"html"` it HTML-escapes the text, splits it on double newlines, wraps each non-empty paragraph in a `<p>` tag, and wraps the whole result in a `<div class='goodboydoc'>` container. For `"rst"` it inserts a line of `=` signs after each non-indented, non-empty line, producing RST-style section title underlines.
+
+## Parameters
+
+<ParamField path="text" type="string" required>
+  Documentation string to format. Typically the output of `generate()` or `parse_docstring()`.
+</ParamField>
+
+<ParamField path="fmt" type="string" default="markdown">
+  Target output format. Accepted values are `"markdown"`, `"html"`, and `"rst"`. Defaults to `"markdown"`.
+</ParamField>
+
+## Return value
+
+Returns a formatted `str` in the requested format. See the format details below.
+
+## Format behavior
+
+<Tabs>
+  <Tab title="markdown">
+    The text is returned unchanged. Use this format when the downstream consumer already handles Markdown, or when you want to process the raw documentation string yourself.
+
+    ```python
+    md = format_output(docs, fmt="markdown")
+    # md == docs
+    ```
+  </Tab>
+  <Tab title="html">
+    The text is HTML-escaped, then split on double newlines (`\n\n`). Each non-empty segment is wrapped in a `<p>` tag, and the full result is wrapped in `<div class='goodboydoc'>`.
+
+    ```python
+    html = format_output(docs, fmt="html")
+    # "<div class='goodboydoc'><p>First paragraph.</p><p>Second paragraph.</p></div>"
+    ```
+  </Tab>
+  <Tab title="rst">
+    After each non-indented, non-empty line a line of `=` characters of the same length is inserted, producing RST section title underlines.
+
+    ```python
+    rst = format_output(docs, fmt="rst")
+    # "My Function\n===========\nDescription text."
+    ```
+  </Tab>
+</Tabs>
+
+## Example
+
+```python
+from goodboydoc import generate, format_output
+
+source = open("mymodule.py").read()
+docs = generate(source, style="google")
+
+# Render as Markdown
+md = format_output(docs, fmt="markdown")
+
+# Render as HTML
+html = format_output(docs, fmt="html")
+
+# Render as RST
+rst = format_output(docs, fmt="rst")
+```
+
+<Note>
+  The `"html"` format HTML-escapes special characters before wrapping in tags, so characters like `<`, `>`, and `&` in the source docstrings will be safely encoded.
+</Note>

@@ -1,0 +1,36 @@
+---
+title: "generate() — parse docstrings from Python source"
+description: "generate(source, style) finds all triple-quoted docstrings in a Python source string, normalizes each one, and returns them joined by double newlines."
+---
+
+`generate()` is the top-level entry point for GoodBoyDoc. Pass it a Python source string and it returns a single formatted documentation string built from every docstring found in that source. Internally it uses a regex-based extractor to locate all triple-quoted docstrings, then normalizes each one with `parse_docstring()` before joining them with double newlines.
+
+## Parameters
+
+<ParamField path="source" type="string" required>
+  Python source code string to extract docstrings from. Pass the full text of a `.py` file or any valid Python snippet.
+</ParamField>
+
+<ParamField path="style" type="string" default="google">
+  Docstring convention used to normalize the extracted text. Accepted values are `"google"`, `"numpy"`, and `"sphinx"`. Defaults to `"google"`.
+</ParamField>
+
+## Return value
+
+Returns a single `str` containing all extracted and normalized docstrings, separated by double newlines. If no docstrings are found, an empty string is returned.
+
+## Example
+
+```python
+from goodboydoc import generate
+
+with open("mymodule.py") as f:
+    source = f.read()
+
+docs = generate(source, style="google")
+print(docs)
+```
+
+<Note>
+  `generate()` only extracts triple-quoted (`"""`) docstrings. Single-quoted (`'''`) strings and inline comments are not captured.
+</Note>
